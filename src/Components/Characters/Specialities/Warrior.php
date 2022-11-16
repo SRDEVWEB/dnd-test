@@ -4,9 +4,12 @@ namespace App\Components\Characters\Specialities;
 
 use App\Components\Characters\Character;
 use App\Components\Items\Weapons\Weapon;
+use App\Interfaces\ExperienceInterface;
+use App\Traits\ExperienceAware;
 
-class Warrior extends Character
+class Warrior extends Character implements ExperienceInterface
 {
+    use ExperienceAware;
 
     /**
      * @throws \Exception

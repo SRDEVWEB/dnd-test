@@ -4,9 +4,13 @@ namespace App\Components\Characters\Specialities;
 
 use App\Components\Characters\Character;
 use App\Components\Items\Weapons\Weapon;
+use App\Interfaces\ExperienceInterface;
+use App\Traits\ExperienceAware;
 
-class Mage extends Character
+class Mage extends Character implements ExperienceInterface
 {
+    use ExperienceAware;
+
     /**
      * @throws \Exception
      */

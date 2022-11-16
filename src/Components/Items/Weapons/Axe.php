@@ -16,5 +16,6 @@ class Axe extends Weapon
         parent::__construct($name, $description, true,
             Item::CAT_WEAPON, $damage, $isTwoHanded,
             Weapon::CLASS_AXE);
+        echo $this->getName().' is in...'.PHP_EOL;
     }
 }
