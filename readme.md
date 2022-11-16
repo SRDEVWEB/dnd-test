@@ -1,2 +1,9 @@
 ## TODOs
-- extract Foe & Gobelin from _OLD/index.php into their own files in src/
+- create an interface for XP, ExperienceInterface :
+    - experienceTotal : int
+    - experienceLevel : int
+    - addXP(int) : void
+    - getXP() : int
+    - getLevel() : int
+
+- create trait ExperienceAware

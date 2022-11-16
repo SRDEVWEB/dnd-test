@@ -3,9 +3,13 @@
 namespace App\Components\Items\Weapons;
 
 use App\Components\Items\Item;
+use App\Interfaces\ExperienceInterface;
+use App\Traits\ExperienceAware;
 
-class Weapon extends Item
+class Weapon extends Item implements ExperienceInterface
 {
+    use ExperienceAware;
+
     public const CLASS_SWORD = 'sword';
     public const CLASS_AXE = 'axe';
     public const CLASS_DAGGER = 'dagger';
@@ -34,6 +38,7 @@ class Weapon extends Item
         $this->damage = $damage;
         $this->isTwoHanded = $isTwoHanded;
         $this->weaponclass = $weaponclass;
+        $this->setExperienceLevelMax(22);
     }
 
     /**

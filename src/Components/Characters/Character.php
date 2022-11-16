@@ -3,13 +3,24 @@
 namespace App\Components\Characters;
 
 use App\Components\Bags\Bag;
+use App\Components\Characters\Pets\Pet;
 use App\Components\Items\Consumables\Consumable;
 use App\Components\Items\Item;
 use App\Components\Items\Shields\Shield;
 use App\Components\Items\Weapons\Weapon;
+use App\Interfaces\OwnershipInterface;
 
 abstract class Character
 {
+    public static function changeBag(
+        Character $char,
+        int $bagSize
+    ): void {
+        $char->inventory = new Bag($bagSize);
+        $char->inventory->setOwner($char);
+    }
+
+
     /**
      * @var string : Character name
      */
@@ -66,12 +77,20 @@ abstract class Character
      * @var bool : Can equip shield
      */
     protected bool $hasShield;
+    /**
+     * @var bool : Can equip a Pet
+     */
+    protected bool $hasPet;
+
+    /**
+     * @var Pet|null : equipped pet
+     */
+    protected ?Pet $pet;
 
     public function __construct(
         string $name,
         string $classe
-    )
-    {
+    ) {
         $this->name = $name;
         $this->creationDate = new \DateTime();
         $this->phyPower = 10;
@@ -82,10 +101,37 @@ abstract class Character
         $this->mana = 10;
         $this->weapon = null;
         $this->shield = null;
-        $this->inventory = new Bag(24);
+
+        $this->hasPet = true;
+
+        self::changeBag($this, 24);
+
         $this->classe = $classe;
         $this->equipableWeapon = [];
         $this->hasShield = false;
+
+        echo $this->getName().' is born'.PHP_EOL;
+    }
+
+    public function giveItemOrPet(OwnershipInterface $itemOrPet): self
+    {
+        $itemOrPet->setOwner($this);
+
+        if ($itemOrPet instanceof Pet) {
+            //  store as char's pet
+            if (!$this->hasPet) {
+                throw new \Exception('You can`t have a pet');
+            }
+            $this->setPet($itemOrPet);
+        } elseif ($itemOrPet instanceof Item) {
+            try {
+                $this->inventory->addItem($itemOrPet);
+            } catch (\Exception $e) {
+                // todo handle exception
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -470,5 +516,35 @@ abstract class Character
         $this->hasShield = $hasShield;
 
         return $this;
+    }
+
+    /**
+     * @return Pet|null
+     */
+    public function getPet(): ?Pet
+    {
+        return $this->pet;
+    }
+
+    /**
+     * @param Pet|null $pet
+     * @return Character
+     */
+    public function setPet(?Pet $pet): Character
+    {
+        $this->pet = $pet;
+        $pet?->setOwner($this);
+        if ($pet !== null) {
+            echo $this->getName()." has summoned ".$pet->getName().PHP_EOL;
+        }
+
+        return $this;
+    }
+
+    public function removePet(): void
+    {
+        $this->pet?->setOwner(null);
+        echo $this->getName()." has dismissed his pet".PHP_EOL;
+        $this->pet = null;
     }
 }

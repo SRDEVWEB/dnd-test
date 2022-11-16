@@ -2,8 +2,15 @@
 
 namespace App\Components\Items;
 
-abstract class Item
+use App\Interfaces\OwnershipInterface;
+use App\Traits\IdAware;
+use App\Traits\OwnershipAware;
+
+abstract class Item implements OwnershipInterface
 {
+    use OwnershipAware;
+    use IdAware;
+
     public const CAT_WEAPON = 'weapon';
     public const CAT_SHIELD = 'shield';
     public const CAT_ARMOR = 'armor';
@@ -49,7 +56,8 @@ abstract class Item
         $this->description = $description;
         $this->equipable = $equipable;
         $this->category = $category;
-        $this->id = microtime() . random_int(100, 999);
+        $this->id = $this->generateId();
+
     }
 
     /**
