@@ -29,25 +29,20 @@ class ProbabilityPicker
     public function pickItem(): array
     {
         $items = $this->sourceData;
+        $tickets = [];
+        foreach ($items as $itemIndex => $itemData) {
+            $ticketCount = round($itemData['probability'] * 1000, 0);
+            $t = 0;
 
-        $totalProbability = 0; // This is defined to keep track of the total amount of entries
-
-        foreach ($items as $itemData) {
-            $probability = $itemData['probability'] ?? .5;
-            $totalProbability += $probability;
-        }
-
-        $stopAt = random_int(0, $totalProbability); // This picks a random entry to select
-        $currentProbability = 0; // The current entry count, when this reaches $stopAt the winner is chosen
-
-        foreach ($items as $itemData) { // Go through each possible item
-            $probability = $itemData['probability'] ?? .5;
-            $currentProbability += $probability; // Add the probability to our $currentProbability tracker
-            if ($currentProbability >= $stopAt) { // When we reach the $stopAt variable, we have found our winner
-                return $itemData;
+            while ($t < $ticketCount) {
+                $tickets[] = $itemIndex;
+                $t++;
             }
         }
+        // shuffle array $tickets
+        shuffle($tickets);
+        $randomTicket = $tickets[random_int(0, count($tickets) - 1)];
 
-        return $this->sourceData[(int)random_int(0, (count($this->sourceData) - 1))];// todo return full random
+        return $this->sourceData[$randomTicket];
     }
 }

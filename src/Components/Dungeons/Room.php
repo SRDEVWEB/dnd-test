@@ -10,7 +10,6 @@ use App\Components\Utils\ProbabilityPicker;
 
 class Room
 {
-
     protected int $roomLevel = 1;
     /**
      * @var array|Foe[]
@@ -45,10 +44,10 @@ class Room
 
         // todo decrire le loot
         echo 'You see '.$this->amountOfItems.' items'.PHP_EOL;
-       for ($i = 0; $i < $this->amountOfItems; $i++) {
-           // echo 'Item N° ' . $i . ' ' . $items['construct']['name'] . ' Description: ' . $items['construct']['description'];
 
-       }
+        foreach ($this->items as $item) {
+            echo 'Le détail des items: '.$item->getName().' '.$item->getDescription().PHP_EOL;
+        }
     }
 
 public function generateItems():void
@@ -61,7 +60,22 @@ public function generateItems():void
                 'construct' => [
                     'name' => 'PickAxeChu',
                     'description' => 'Elle fait hachement mal!',
-                    'damage' =>20,
+                    'damage' =>5,
+                    'isTwoHanded' => false
+                ],
+                'coffre' => function (Axe $axe) {
+                    return $axe;
+                },
+            ],
+        ],
+        [
+            'probability' => .4,
+            'data' => [
+                'class' => Axe::class,
+                'construct' => [
+                    'name' => 'AxeForMen',
+                    'description' => 'Elle sent bon en plus de faire mal!',
+                    'damage' =>15,
                     'isTwoHanded' => false
                 ],
                 'coffre' => function (Axe $axe) {
@@ -159,8 +173,6 @@ public function generateItems():void
                 ],
             ],
         ];
-
-
 
         $pp = new ProbabilityPicker($arrayMonstersSpawnable);
         echo "Room level: ".$this->roomLevel.PHP_EOL;
